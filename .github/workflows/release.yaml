@@ -1,0 +1,119 @@
+name: Publish crate
+
+on:
+  push:
+    tags: [v*]
+
+permissions:
+  contents: write
+
+jobs:
+  build-for-apple:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install cross
+        run: cargo install cross
+
+      - name: Build for Mac
+        run: cross build --target x86_64-apple-darwin --release
+        env:
+          CARGO_TARGET_DIR: target/x86_64-apple-darwin
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: x86_64-apple-darwin
+          path: target/x86_64-apple-darwin/release/clipcat
+
+  build-and-release:
+    runs-on: ubuntu-latest
+    needs: build-for-apple
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install cross
+        run: cargo install cross
+
+      - name: Build for Linux amd64
+        run: cross build --target x86_64-unknown-linux-gnu --release
+        env:
+          CARGO_TARGET_DIR: target/x86_64-unknown-linux-gnu
+
+      - name: Build for Linux arm
+        run: cross build --target arm-unknown-linux-gnueabihf --release
+        env:
+          CARGO_TARGET_DIR: target/arm-unknown-linux-gnueabihf
+
+      - name: Build for Windows
+        run: cross build --target x86_64-pc-windows-gnu --release
+        env:
+          CARGO_TARGET_DIR: target/x86_64-pc-windows-gnu
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux amd64 binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/x86_64-unknown-linux-gnu/release/clipcat
+          asset_name: clipcat-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Linux arm binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/arm-unknown-linux-gnueabihf/release/clipcat
+          asset_name: clipcat-linux-arm
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/x86_64-pc-windows-gnu/release/clipcat.exe
+          asset_name: clipcat-windows.exe
+          asset_content_type: application/octet-stream
+
+      - name: Download apple binary
+        uses: actions/download-artifact@v2
+        with:
+          name: x86_64-apple-darwin
+          path: target/x86_64-apple-darwin
+
+      - name: Upload Mac binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/x86_64-apple-darwin/release/clipcat
+          asset_name: clipcat
+          asset_content_type: application/octet-stream
