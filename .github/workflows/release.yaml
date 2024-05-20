@@ -139,12 +139,20 @@ jobs:
           name: aarch64-apple-darwin
           path: target/aarch64-apple-darwin/release/
 
+      - name: Rename binaries
+        run: |
+          mv target/x86_64-unknown-linux-gnu/release/clipcat clipcat-linux-x86_64
+          mv target/arm-unknown-linux-gnueabihf/release/clipcat clipcat-linux-arm
+          mv target/x86_64-pc-windows-gnu/release/clipcat.exe clipcat-windows-x86_64.exe
+          mv target/x86_64-apple-darwin/release/clipcat clipcat-apple-x86_64
+          mv target/aarch64-apple-darwin/release/clipcat clipcat-apple-aarch64
+
       - name: Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/x86_64-unknown-linux-gnu/release/clipcat
-            target/arm-unknown-linux-gnueabihf/release/clipcat
-            target/x86_64-pc-windows-gnu/release/clipcat.exe
-            target/x86_64-apple-darwin/release/clipcat
-            target/aarch64-apple-darwin/release/clipcat
+            clipcat-linux-x86_64
+            clipcat-linux-arm
+            clipcat-windows-x86_64.exe
+            clipcat-apple-x86_64
+            clipcat-apple-aarch64
