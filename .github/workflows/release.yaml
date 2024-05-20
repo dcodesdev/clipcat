@@ -167,7 +167,7 @@ jobs:
 
   crates-io:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, release]
     env:
       CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
