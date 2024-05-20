@@ -113,31 +113,31 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: x86_64-unknown-linux-gnu
-          path: target/x86_64-unknown-linux-gnu/release/clipcat
+          path: target/x86_64-unknown-linux-gnu/release/
 
       - name: Download Linux arm artifact
         uses: actions/download-artifact@v4
         with:
           name: arm-unknown-linux-gnueabihf
-          path: target/arm-unknown-linux-gnueabihf/release/clipcat
+          path: target/arm-unknown-linux-gnueabihf/release/
 
       - name: Download Windows x86_64 artifact
         uses: actions/download-artifact@v4
         with:
           name: x86_64-pc-windows-gnu
-          path: target/x86_64-pc-windows-gnu/release/clipcat.exe
+          path: target/x86_64-pc-windows-gnu/release/
 
       - name: Download Apple x86_64 artifact
         uses: actions/download-artifact@v4
         with:
           name: x86_64-apple-darwin
-          path: target/x86_64-apple-darwin/release/clipcat
+          path: target/x86_64-apple-darwin/release/
 
       - name: Download Apple aarch64 artifact
         uses: actions/download-artifact@v4
         with:
           name: aarch64-apple-darwin
-          path: target/aarch64-apple-darwin/release/clipcat
+          path: target/aarch64-apple-darwin/release/
 
       - name: Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
