@@ -21,6 +21,9 @@ jobs:
       - name: Install cross
         run: cargo install cross
 
+      - name: Add target to rustup
+        run: rustup target add x86_64-apple-darwin
+
       - name: Build for Mac
         run: cross build --target x86_64-apple-darwin --release
         env:
