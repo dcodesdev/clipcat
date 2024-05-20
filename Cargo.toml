@@ -2,5 +2,12 @@
 name = "clipcat"
 version = "0.1.0"
 edition = "2021"
+description = "A command line tool for copying the contents to clipboard of multiple files in one go."
+repository = "https://github.com/dcodesdev/clipcat"
+license = "MIT"
 
 [dependencies]
+anyhow = "1.0.86"
+clap = { version = "4.5.4", features = ["derive"] }
+copypasta = "0.10.1"
+tiktoken-rs = "0.5.9"
