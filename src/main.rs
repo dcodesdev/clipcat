@@ -1,3 +1,9 @@
-fn main() {
-    println!("Hello, world!");
+mod cli;
+mod clip;
+mod run;
+
+use run::run;
+
+fn main() -> anyhow::Result<()> {
+    run()
 }
