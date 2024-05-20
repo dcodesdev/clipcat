@@ -147,6 +147,14 @@ jobs:
           mv target/x86_64-apple-darwin/release/clipcat clipcat-apple-x86_64
           mv target/aarch64-apple-darwin/release/clipcat clipcat-apple-aarch64
 
+      - name: Give executable permissions
+        run: |
+          chmod +x clipcat-linux-x86_64
+          chmod +x clipcat-linux-arm
+          chmod +x clipcat-windows-x86_64.exe
+          chmod +x clipcat-apple-x86_64
+          chmod +x clipcat-apple-aarch64
+
       - name: Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
         with:
