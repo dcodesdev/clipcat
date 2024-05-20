@@ -144,16 +144,16 @@ jobs:
           mv target/x86_64-unknown-linux-gnu/release/clipcat clipcat-linux-x86_64
           mv target/arm-unknown-linux-gnueabihf/release/clipcat clipcat-linux-arm
           mv target/x86_64-pc-windows-gnu/release/clipcat.exe clipcat-windows-x86_64.exe
-          mv target/x86_64-apple-darwin/release/clipcat clipcat-apple-x86_64
-          mv target/aarch64-apple-darwin/release/clipcat clipcat-apple-aarch64
+          mv target/x86_64-apple-darwin/release/clipcat clipcat-macos-x86_64
+          mv target/aarch64-apple-darwin/release/clipcat clipcat-macos-aarch64
 
       - name: Give executable permissions
         run: |
           chmod +x clipcat-linux-x86_64
           chmod +x clipcat-linux-arm
           chmod +x clipcat-windows-x86_64.exe
-          chmod +x clipcat-apple-x86_64
-          chmod +x clipcat-apple-aarch64
+          chmod +x clipcat-macos-x86_64
+          chmod +x clipcat-macos-aarch64
 
       - name: Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
@@ -162,5 +162,5 @@ jobs:
             clipcat-linux-x86_64
             clipcat-linux-arm
             clipcat-windows-x86_64.exe
-            clipcat-apple-x86_64
-            clipcat-apple-aarch64
+            clipcat-macos-x86_64
+            clipcat-macos-aarch64
