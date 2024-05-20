@@ -24,7 +24,11 @@ fn read_directory_contents_recursive(
 
             let mut file_content = String::new();
             let mut file = fs::File::open(&path)?;
-            file.read_to_string(&mut file_content)?;
+
+            if let Err(_) = file.read_to_string(&mut file_content) {
+                println!("Skipping non UTF-8 file: {}", relative_path);
+                return Ok(());
+            }
 
             combined_content.push_str(&file_content);
             combined_content.push('\n');
@@ -32,5 +36,6 @@ fn read_directory_contents_recursive(
             read_directory_contents_recursive(base_path, &path, combined_content)?;
         }
     }
+
     Ok(())
 }
