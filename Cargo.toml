@@ -7,3 +7,4 @@ edition = "2021"
 anyhow = "1.0.86"
 clap = { version = "4.5.4", features = ["derive"] }
 copypasta = "0.10.1"
+tiktoken-rs = "0.5.9"
