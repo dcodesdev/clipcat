@@ -8,11 +8,25 @@ permissions:
   contents: write
 
 jobs:
-  build-for-apple:
-    runs-on: macos-latest
+  test:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Run tests
+        run: cargo test
+
+  build-for-apple:
+    runs-on: macos-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -34,20 +48,24 @@ jobs:
         env:
           CARGO_TARGET_DIR: target/aarch64-apple-darwin
 
-      - name: Upload artifact
+      - name: Upload x86_64-apple-darwin artifact
         uses: actions/upload-artifact@v4
         with:
           name: x86_64-apple-darwin
-          path: |
-            target/x86_64-apple-darwin/clipcat
-            target/aarch64-apple-darwin/clipcat
+          path: target/x86_64-apple-darwin/release/clipcat
+
+      - name: Upload aarch64-apple-darwin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: x86_64-apple-darwin
+          path: target/aarch64-apple-darwin/release/clipcat
 
   build-and-release:
     runs-on: ubuntu-latest
     needs: build-for-apple
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -75,20 +93,20 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: x86_64-apple-darwin
-          path: target/x86_64-apple-darwin
+          path: target/x86_64-apple-darwin/release/clipcat
 
       - name: Download Apple aarch64 artifact
         uses: actions/download-artifact@v2
         with:
           name: aarch64-apple-darwin
-          path: target/aarch64-apple-darwin
+          path: target/aarch64-apple-darwin/release/clipcat
 
       - name: Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/x86_64-unknown-linux-gnu/clipcat
-            target/arm-unknown-linux-gnueabihf/clipcat
-            target/x86_64-pc-windows-gnu/clipcat.exe
+            target/x86_64-unknown-linux-gnu/release/clipcat
+            target/arm-unknown-linux-gnueabihf/release/clipcat
+            target/x86_64-pc-windows-gnu/release/clipcat.exe
             target/x86_64-apple-darwin/release/clipcat
             target/aarch64-apple-darwin/release/clipcat
