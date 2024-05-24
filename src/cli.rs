@@ -6,4 +6,7 @@ use clap::Parser;
 pub struct Opts {
     #[clap(default_value = "./")]
     pub path: String,
+
+    #[clap(short, long)]
+    pub token: bool,
 }

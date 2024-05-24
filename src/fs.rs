@@ -2,11 +2,24 @@ use std::fs;
 use std::io::Read;
 use std::path::Path;
 
-pub fn read_directory_contents(dir: &str) -> anyhow::Result<String> {
+pub fn read_directory_contents(dir: &Path) -> anyhow::Result<String> {
     let mut combined_content = String::new();
-    let base_path = Path::new(dir);
-    read_directory_contents_recursive(base_path, base_path, &mut combined_content)?;
+
+    if dir.is_file() {
+        read_file(dir, &mut combined_content)?;
+    } else {
+        read_directory_contents_recursive(dir, dir, &mut combined_content)?;
+    }
+
     Ok(combined_content)
+}
+
+pub fn read_file(path: &Path, content: &mut String) -> anyhow::Result<()> {
+    let file_content = std::fs::read_to_string(path)?;
+
+    *content = file_content;
+
+    Ok(())
 }
 
 fn read_directory_contents_recursive(
