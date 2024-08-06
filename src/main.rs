@@ -1,6 +1,7 @@
 mod cli;
 mod clip;
 mod fs;
+mod num;
 mod run;
 mod tiktoken;
 

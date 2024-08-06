@@ -1,6 +1,6 @@
 [package]
 name = "clipcat"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A command line tool for copying the contents to clipboard of multiple files in one go."
 repository = "https://github.com/dcodesdev/clipcat"
