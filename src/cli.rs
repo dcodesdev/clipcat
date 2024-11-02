@@ -9,4 +9,7 @@ pub struct Opts {
 
     #[clap(short, long)]
     pub token: bool,
+
+    #[clap(short)]
+    pub print: bool,
 }

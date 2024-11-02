@@ -24,5 +24,9 @@ pub fn run() -> anyhow::Result<()> {
         println!("{} GPT-4 tokens.", tokens);
     }
 
+    if opts.print {
+        println!("{}", contents);
+    }
+
     Ok(())
 }
