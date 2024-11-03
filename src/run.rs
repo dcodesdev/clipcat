@@ -2,16 +2,19 @@ use clap::Parser;
 use std::path::Path;
 
 use crate::{
-    cli, clip::copy_to_clipboard, fs::read_directory_contents, num::format_number,
-    tiktoken::count_tokens,
+    cli, clip::copy_to_clipboard, fs::read_contents, num::format_number, tiktoken::count_tokens,
 };
 
 pub fn run() -> anyhow::Result<()> {
     let opts = cli::Opts::parse();
-    let (path, token) = (opts.path, opts.token);
+    let (files, token) = (opts.path, opts.token);
 
-    let path = Path::new(&path);
-    let contents = read_directory_contents(path)?;
+    let mut contents = String::new();
+    for path in files.iter() {
+        let path = Path::new(&path);
+        let content = read_contents(&path)?;
+        contents.push_str(&content);
+    }
 
     copy_to_clipboard(&contents)?;
 
